@@ -2,6 +2,8 @@ package com.example.demo.controllers;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,15 +25,19 @@ public class ItemController {
 	public ResponseEntity<List<Item>> getItems() {
 		return ResponseEntity.ok(itemRepository.findAll());
 	}
+
+	private Logger log = LoggerFactory.getLogger(UserController.class);
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<Item> getItemById(@PathVariable Long id) {
+		log.info("Get Item with ID : " + id);
 		return ResponseEntity.of(itemRepository.findById(id));
 	}
 	
 	@GetMapping("/name/{name}")
 	public ResponseEntity<List<Item>> getItemsByName(@PathVariable String name) {
 		List<Item> items = itemRepository.findByName(name);
+		log.info("Get Item with name : " + name);
 		return items == null || items.isEmpty() ? ResponseEntity.notFound().build()
 				: ResponseEntity.ok(items);
 			
