@@ -14,40 +14,58 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import static com.auth0.jwt.algorithms.Algorithm.HMAC512;
+
 public class JWTAuthenticationVerificationFilter extends BasicAuthenticationFilter {
     public JWTAuthenticationVerificationFilter(AuthenticationManager authManager) {
         super(authManager);
     }
 
+//    @Override
+//    protected void doFilterInternal(HttpServletRequest req,
+//                                    HttpServletResponse res,
+//                                    FilterChain chain) throws IOException, ServletException {
+//
+//        String jwtToken = req.getHeader(Constants.HEADER_STRING);
+//
+//        if (jwtToken == null || !jwtToken.startsWith(Constants.TOKEN_PREFIX)) {
+//            chain.doFilter(req, res);
+//            return;
+//        }
+//
+//        UsernamePasswordAuthenticationToken authentication = getAuthentication(jwtToken);
+//
+//        SecurityContextHolder.getContext().setAuthentication(authentication);
+//        chain.doFilter(req, res);
+//    }
+
     @Override
-    protected void doFilterInternal(HttpServletRequest req,
-                                    HttpServletResponse res,
-                                    FilterChain chain) throws IOException, ServletException {
+    protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain chain)
+            throws IOException, ServletException {
+        String header = req.getHeader(Constants.HEADER_STRING);
 
-        String jwtToken = req.getHeader(Constants.HEADER_STRING);
-
-        if (jwtToken == null || !jwtToken.startsWith(Constants.TOKEN_PREFIX)) {
+        if (header == null || !header.startsWith(Constants.TOKEN_PREFIX)) {
             chain.doFilter(req, res);
             return;
         }
 
-        UsernamePasswordAuthenticationToken authentication = getAuthentication(jwtToken);
+        UsernamePasswordAuthenticationToken authentication = getAuthentication(req);
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         chain.doFilter(req, res);
     }
 
-    private UsernamePasswordAuthenticationToken getAuthentication(String token) {
-
-        String user = JWT.require(Algorithm.HMAC512(Constants.SECRET.getBytes()))
-                .build()
-                .verify(token.replace(Constants.TOKEN_PREFIX, ""))
-                .getSubject();
-
-        if (user != null) {
-            return new UsernamePasswordAuthenticationToken(user, null, new ArrayList<>());
+    private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest req) {
+        String token = req.getHeader(Constants.HEADER_STRING);
+        if (token != null) {
+            String user = JWT.require(HMAC512(Constants.SECRET.getBytes())).build()
+                    .verify(token.replace(Constants.TOKEN_PREFIX, ""))
+                    .getSubject();
+            if (user != null) {
+                return new UsernamePasswordAuthenticationToken(user, null, new ArrayList<>());
+            }
+            return null;
         }
         return null;
-
     }
 }
