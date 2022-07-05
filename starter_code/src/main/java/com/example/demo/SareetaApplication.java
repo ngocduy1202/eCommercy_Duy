@@ -16,7 +16,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @EnableJpaRepositories("com.example.demo.model.persistence.repositories")
 @EntityScan("com.example.demo.model.persistence")
-@ComponentScan({"com.example.demo.model.requests","com.example.demo.controllers"})
+@ComponentScan({"com.example.demo.model.requests","com.example.demo.controllers","com.example.demo.security"})
 @SpringBootApplication(exclude = {SecurityAutoConfiguration.class})
 @EnableSwagger2
 public class SareetaApplication {
