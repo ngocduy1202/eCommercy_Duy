@@ -38,6 +38,7 @@ public class CartController {
 	
 	@PostMapping("/addToCart")
 	public ResponseEntity<Cart> addToCart(@RequestBody ModifyCartRequest request) {
+		log.info("Into add to cart");
 		User user = userRepository.findByUsername(request.getUsername());
 		if(user == null) {
 			log.error("Cannot get User because user is not found");
@@ -58,6 +59,7 @@ public class CartController {
 	
 	@PostMapping("/removeFromCart")
 	public ResponseEntity<Cart> removeFromCart(@RequestBody ModifyCartRequest request) {
+		log.info("Into remove from cart");
 		User user = userRepository.findByUsername(request.getUsername());
 		if(user == null) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
