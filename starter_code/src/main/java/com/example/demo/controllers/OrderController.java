@@ -42,6 +42,7 @@ public class OrderController {
 		}
 		UserOrder order = UserOrder.createFromCart(user.getCart());
 		orderRepository.save(order);
+		log.info("Submit order for "+username+" successful");
 		return ResponseEntity.ok(order);
 	}
 	
@@ -52,6 +53,7 @@ public class OrderController {
 		if(user == null) {
 			return ResponseEntity.notFound().build();
 		}
+		log.info("Get history order for "+username+" successful");
 		return ResponseEntity.ok(orderRepository.findByUser(user));
 	}
 }
