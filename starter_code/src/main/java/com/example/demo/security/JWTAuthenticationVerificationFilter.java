@@ -1,7 +1,8 @@
 package com.example.demo.security;
 
 import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 import static com.auth0.jwt.algorithms.Algorithm.HMAC512;
 
 public class JWTAuthenticationVerificationFilter extends BasicAuthenticationFilter {
+    private Logger log = LoggerFactory.getLogger(JWTAuthenticationVerificationFilter.class);
     public JWTAuthenticationVerificationFilter(AuthenticationManager authManager) {
         super(authManager);
     }
@@ -42,6 +44,7 @@ public class JWTAuthenticationVerificationFilter extends BasicAuthenticationFilt
     @Override
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain chain)
             throws IOException, ServletException {
+        log.info("into doFilterInternal");
         String header = req.getHeader(Constants.HEADER_STRING);
 
         if (header == null || !header.startsWith(Constants.TOKEN_PREFIX)) {
@@ -56,6 +59,7 @@ public class JWTAuthenticationVerificationFilter extends BasicAuthenticationFilt
     }
 
     private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest req) {
+        log.info("into getAuthentication");
         String token = req.getHeader(Constants.HEADER_STRING);
         if (token != null) {
             String user = JWT.require(HMAC512(Constants.SECRET.getBytes())).build()

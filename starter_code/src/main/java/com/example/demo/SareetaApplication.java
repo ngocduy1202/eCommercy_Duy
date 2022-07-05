@@ -21,14 +21,15 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableSwagger2
 public class SareetaApplication {
 	private static Logger log = LoggerFactory.getLogger(SareetaApplication.class);
+	@Bean
+	public BCryptPasswordEncoder bCryptPasswordEncoder(){
+		return new BCryptPasswordEncoder();
+	}
 	public static void main(String[] args) {
 		SpringApplication.run(SareetaApplication.class, args);
 		log.info("into main");
 		log.info("running in main");
 	}
-	@Bean
-	public BCryptPasswordEncoder bCryptPasswordEncoder(){
-		return new BCryptPasswordEncoder();
-	}
+
 
 }

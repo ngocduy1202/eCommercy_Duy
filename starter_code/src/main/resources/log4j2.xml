@@ -22,7 +22,7 @@
     </Appenders>
     <Loggers>
 
-        <Logger name="starter_code" additivity="false">
+        <Logger name="com.example.demo" additivity="false">
             <AppenderRef ref="appLog" />
             <AppenderRef ref="Console" />
         </Logger>

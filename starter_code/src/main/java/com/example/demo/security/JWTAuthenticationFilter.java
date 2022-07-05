@@ -25,15 +25,18 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     private Logger log = LoggerFactory.getLogger(JWTAuthenticationFilter.class);
 
+
     private AuthenticationManager authenticationManager;
 
     public JWTAuthenticationFilter(AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
     }
 
+
     @Override
     public Authentication attemptAuthentication(HttpServletRequest req,
                                                 HttpServletResponse res) throws AuthenticationException {
+        log.info("into attemptAuthentication");
         try {
             User creds = new ObjectMapper().readValue(req.getInputStream(), User.class);
 
@@ -54,6 +57,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                                             FilterChain chain,
                                             Authentication auth) throws IOException, ServletException {
         String username = ((org.springframework.security.core.userdetails.User) auth.getPrincipal()).getUsername();
+        log.info("into successfulAuthentication");
         String token = JWT.create()
                 .withSubject(username)
                 .withExpiresAt(new Date(System.currentTimeMillis() + Constants.EXPIRATION_TIME))
